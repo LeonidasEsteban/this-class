@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>this</title>
+  <style>
+    body {
+      background: #f6df1d;
+      font-family: system-ui;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      flex-direction: column;
+    }
+    .container {
+      color: #e90063;
+      font-size: 2.8em;
+    }
+  </style>
+</head>
+<body>
+  <h1>This es el objeto contexto de JavaScript en el cual se está ejecutando el código actual.</h1>
+  <h1 id="container" class="container"></h1>
+
+  <script>
+    const $container = document.querySelector('#container')
+    // function renderName(name) {
+    //   $container.textContent = `Pokemon encontrado ${name}`
+    // }
+    // function renderType(type) {
+    //   $container.textContent = `Es de tipo ${type}`
+    // }
+    // renderName('Pikachu')
+    // renderType('Electric')
+
+    // ¿Dónde estoy ejecutando mi código? #CONTEXTO
+
+    // this en Node
+    // this en el Browser
+
+    // const pokemon = {
+    //   $container: document.querySelector('#container'),
+    //   renderName: function(name) {
+    //     this.$container.textContent = `Pokemon encontrado ${name}`
+    //   },
+    //   renderType: function(type) {
+    //     this.$container.textContent = `Es de tipo ${type}`
+    //   }
+    // }
+
+    // pokemon.renderName('Bulbasaur')
+
+    class API {
+      BASE_URL = 'https://pokeapi.co/api/v2/'
+      async fetch(id) {
+        const searchId = id || this.id
+        const response = await fetch(`${this.BASE_URL}pokemon/${searchId}`)
+        const pokemon = await response.json()
+        this.pokemon = pokemon
+        return pokemon
+      }
+    }
+
+    // const api = new API
+    // api.fetch(25)
+    // .then((data) => {
+    //   $container.textContent = data.name
+    // })
+
+
+    class Pokemon extends API {
+      constructor(id) {
+        super(id)
+        this.id = id
+      }
+      $container = document.querySelector('#container')
+      renderName() {
+        // this.$container.textContent = `Pokemon encontrado ${name}`
+        this.$container.textContent = `Pokemon encontrado ${this.pokemon.name}`
+      }
+      renderType() {
+        this.$container.textContent = `Es de tipo ${this.pokemon.types[0].type.name}`
+      }
+    }
+
+    const pokemon = new Pokemon(66)
+    pokemon.fetch()
+    .then(() => {
+      // pokemon.renderName()
+      pokemon.renderType()
+    })
+    // pikachu.renderName('pikachu')
+  </script>
+</body>
+</html>
